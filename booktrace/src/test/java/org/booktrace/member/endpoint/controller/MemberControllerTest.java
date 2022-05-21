@@ -23,8 +23,9 @@ class MemberControllerTest {
     public void signUpFormAccess() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/sign-up"))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("member/sign-up"));
+                .andExpect(MockMvcResultMatchers.status().isOk()) // HTTP Status가 200 OK인지 확인합니다.
+                .andExpect(MockMvcResultMatchers.view().name("member/sign-up")) // view가 제대로 이동했는지 확인합니다.
+                .andExpect(MockMvcResultMatchers.model().attributeExists("signUpForm")); // 객체로 전달했던 attribute가 존재하는지 확인합니다.
     }
 
 }
