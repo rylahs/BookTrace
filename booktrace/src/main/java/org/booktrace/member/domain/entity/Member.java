@@ -3,6 +3,7 @@ package org.booktrace.member.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,4 +31,7 @@ public class Member {
     @Embedded                                                                                           // (4)
     private Profile profile;
 
+    public void generateToken() {
+        this.emailToken = UUID.randomUUID().toString();
+    }
 }
