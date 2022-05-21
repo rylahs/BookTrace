@@ -52,25 +52,18 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "member/sign-up";
         }
-
-        /** 검증 로직 부분
-        signUpFormValidator.validate(signUpForm,bindingResult); // Validator를 이용해 객체를 검증하고, 에러가 있을 경우 기존과 동일하게 처리합니다.
-        if (bindingResult.hasErrors()) {
-            return "member/sign-up";
-        }
-        */
-
         /** 회원 가입 로직 시작 */
-        Member member = Member.builder() // Entity를 생성
-                .email(signUpForm.getEmail())
-                .password(signUpForm.getPassword())
-                .nickname(signUpForm.getNickname())
-                .build();
-
-        Member newMember = memberRepository.save(member); // Entity를 저장
+        Member newMember = saveNewMember(signUpForm);
 
         newMember.generateToken(); //  이메일 인증용 토큰을 생성
 
+        sendVerificationEmail(newMember);
+
+
+        return "redirect:/";
+    }
+
+    private void sendVerificationEmail(Member newMember) {
         SimpleMailMessage mailMessage = new SimpleMailMessage(); //  이메일을 객체를 생성
 
         // 이메일 내용 삽입
@@ -80,8 +73,16 @@ public class MemberController {
                                 newMember.getEmailToken(), newMember.getEmail())); // 본문에 추가할 링크 주소
 
         mailSender.send(mailMessage); // 메일 보내기
+    }
 
+    private Member saveNewMember(SignUpForm signUpForm) {
+        Member member = Member.builder() // Entity를 생성
+                .email(signUpForm.getEmail())
+                .password(signUpForm.getPassword())
+                .nickname(signUpForm.getNickname())
+                .build();
 
-        return "redirect:/";
+        Member newMember = memberRepository.save(member); // Entity를 저장
+        return newMember;
     }
 }
