@@ -14,6 +14,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
 
+    public void signUp(SignUpForm signUpForm) {
+        /** 회원 가입 로직 시작 */
+        Member newMember = saveNewMember(signUpForm);
+
+        newMember.generateToken(); //  이메일 인증용 토큰을 생성
+
+        sendVerificationEmail(newMember);
+    }
     public Member saveNewMember(SignUpForm signUpForm) {
         Member member = Member.builder() // Entity를 생성
                 .email(signUpForm.getEmail())

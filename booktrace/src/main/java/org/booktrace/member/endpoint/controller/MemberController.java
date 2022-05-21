@@ -52,12 +52,8 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "member/sign-up";
         }
-        /** 회원 가입 로직 시작 */
-        Member newMember = memberService.saveNewMember(signUpForm);
 
-        newMember.generateToken(); //  이메일 인증용 토큰을 생성
-
-        memberService.sendVerificationEmail(newMember);
+        memberService.signUp(signUpForm);
 
         return "redirect:/";
     }
