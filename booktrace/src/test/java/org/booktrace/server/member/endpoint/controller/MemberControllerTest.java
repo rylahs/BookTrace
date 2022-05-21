@@ -1,6 +1,6 @@
-package org.booktrace.member.endpoint.controller;
+package org.booktrace.server.member.endpoint.controller;
 
-import org.booktrace.member.infra.repository.MemberRepository;
+import org.booktrace.server.member.infra.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

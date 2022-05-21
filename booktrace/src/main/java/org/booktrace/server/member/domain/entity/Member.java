@@ -1,4 +1,4 @@
-package org.booktrace.member.domain.entity;
+package org.booktrace.server.member.domain.entity;
 
 import lombok.*;
 

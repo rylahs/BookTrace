@@ -1,9 +1,9 @@
-package org.booktrace.member.application;
+package org.booktrace.server.member.application;
 
 import lombok.RequiredArgsConstructor;
-import org.booktrace.member.domain.entity.Member;
-import org.booktrace.member.endpoint.controller.SignUpForm;
-import org.booktrace.member.infra.repository.MemberRepository;
+import org.booktrace.server.member.domain.entity.Member;
+import org.booktrace.server.member.endpoint.controller.SignUpForm;
+import org.booktrace.server.member.infra.repository.MemberRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

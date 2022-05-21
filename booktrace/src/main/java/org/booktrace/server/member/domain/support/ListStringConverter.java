@@ -1,4 +1,4 @@
-package org.booktrace.member.domain.support;
+package org.booktrace.server.member.domain.support;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

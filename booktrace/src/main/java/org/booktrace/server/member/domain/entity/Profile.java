@@ -1,7 +1,7 @@
-package org.booktrace.member.domain.entity;
+package org.booktrace.server.member.domain.entity;
 
 import lombok.*;
-import org.booktrace.member.domain.support.ListStringConverter;
+import org.booktrace.server.member.domain.support.ListStringConverter;
 
 import javax.persistence.*;
 import java.util.List;

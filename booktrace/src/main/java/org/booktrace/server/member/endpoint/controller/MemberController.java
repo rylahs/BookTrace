@@ -1,12 +1,8 @@
-package org.booktrace.member.endpoint.controller;
+package org.booktrace.server.member.endpoint.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.booktrace.member.application.MemberService;
-import org.booktrace.member.domain.entity.Member;
-import org.booktrace.member.endpoint.controller.validator.SignUpFormValidator;
-import org.booktrace.member.infra.repository.MemberRepository;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.booktrace.server.member.application.MemberService;
+import org.booktrace.server.member.endpoint.controller.validator.SignUpFormValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
