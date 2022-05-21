@@ -8,15 +8,16 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
-
     private final PasswordEncoder passwordEncoder; // DI Password Encoder
 
+    @Transactional // DB Save
     public void signUp(SignUpForm signUpForm) {
         /** 회원 가입 로직 시작 */
         Member newMember = saveNewMember(signUpForm);
@@ -46,5 +47,9 @@ public class MemberService {
                 newMember.getEmailToken(), newMember.getEmail())); // 본문에 추가할 링크 주소
 
         mailSender.send(mailMessage); // 메일 보내기
+    }
+
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email); // MemberRepository에서 email을 통해 Member Entity를 가져옴
     }
 }

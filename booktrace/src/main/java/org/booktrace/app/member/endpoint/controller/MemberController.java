@@ -2,7 +2,9 @@ package org.booktrace.app.member.endpoint.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.booktrace.app.member.application.MemberService;
+import org.booktrace.app.member.domain.entity.Member;
 import org.booktrace.app.member.endpoint.controller.validator.SignUpFormValidator;
+import org.booktrace.app.member.infra.repository.MemberRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,7 @@ public class MemberController {
     private final SignUpFormValidator signUpFormValidator;
     private final MemberService memberService;
 
+    private final MemberRepository memberRepository;
     /**
      * @InitBinder를 사용해서 Attribute로 바인딩할 객체를 지정해서
      * WebDataBinder를 이용해서 Validator를 추가해준다.
@@ -54,5 +57,26 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @GetMapping("/check-email-token")
+    public String verifyEmail(String token, String email, Model model) { // 이메일 링크 클릭시 호출되는 메소드
+        Member member = memberService.findMemberByEmail(email); // MemberService에서 Email을 통해 회원 정보 조회
+
+        if (member == null) { // 계정이 없으면 Error를 model 객체에 담아서 전달
+            model.addAttribute("error", "wrong.email");
+            return "member/email-verification";
+        }
+
+        if (!token.equals(member.getEmailToken())) { // 계정은 있지만 토큰이 일치하지 않으면 model 객체에 Error를 담아서 전달
+            model.addAttribute("error", "wrong.token");
+            return "member/email-verification";
+        }
+
+        member.verified(); // 인증 성공
+
+        model.addAttribute("numberOfMembers", memberRepository.count()); // 성공시 보여줄 객체를 model에 담아서 전달
+        model.addAttribute("nickname", member.getNickname()); // 성공시 보여줄 객체를 model에 담아서 전달
+
+        return "member/email-verification"; // Redirect 이메일 인증
+    }
 
 }
