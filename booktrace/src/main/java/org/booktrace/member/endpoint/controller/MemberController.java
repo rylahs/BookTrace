@@ -1,6 +1,7 @@
 package org.booktrace.member.endpoint.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.booktrace.member.application.MemberService;
 import org.booktrace.member.domain.entity.Member;
 import org.booktrace.member.endpoint.controller.validator.SignUpFormValidator;
 import org.booktrace.member.infra.repository.MemberRepository;
@@ -21,8 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberController {
 
     private final SignUpFormValidator signUpFormValidator;
-    private final MemberRepository memberRepository; // MemberRepository DI
-    private final JavaMailSender mailSender; // JavaMailSender DI
+    private final MemberService memberService;
 
     /**
      * @InitBinder를 사용해서 Attribute로 바인딩할 객체를 지정해서
@@ -53,36 +53,14 @@ public class MemberController {
             return "member/sign-up";
         }
         /** 회원 가입 로직 시작 */
-        Member newMember = saveNewMember(signUpForm);
+        Member newMember = memberService.saveNewMember(signUpForm);
 
         newMember.generateToken(); //  이메일 인증용 토큰을 생성
 
-        sendVerificationEmail(newMember);
-
+        memberService.sendVerificationEmail(newMember);
 
         return "redirect:/";
     }
 
-    private void sendVerificationEmail(Member newMember) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage(); //  이메일을 객체를 생성
 
-        // 이메일 내용 삽입
-        mailMessage.setTo(newMember.getEmail());
-        mailMessage.setSubject("BookTrace 회원 가입 인증");
-        mailMessage.setText(String.format("/check-email-token?token=%s&email=%s",
-                                newMember.getEmailToken(), newMember.getEmail())); // 본문에 추가할 링크 주소
-
-        mailSender.send(mailMessage); // 메일 보내기
-    }
-
-    private Member saveNewMember(SignUpForm signUpForm) {
-        Member member = Member.builder() // Entity를 생성
-                .email(signUpForm.getEmail())
-                .password(signUpForm.getPassword())
-                .nickname(signUpForm.getNickname())
-                .build();
-
-        Member newMember = memberRepository.save(member); // Entity를 저장
-        return newMember;
-    }
 }
