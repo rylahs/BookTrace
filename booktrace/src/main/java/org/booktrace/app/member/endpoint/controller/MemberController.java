@@ -52,7 +52,8 @@ public class MemberController {
             return "member/sign-up";
         }
 
-        memberService.signUp(signUpForm);
+        Member member = memberService.signUp(signUpForm);
+        memberService.login(member);
 
         return "redirect:/";
     }
@@ -72,6 +73,8 @@ public class MemberController {
         }
 
         member.verified(); // 인증 성공
+
+        memberService.login(member);
 
         model.addAttribute("numberOfMembers", memberRepository.count()); // 성공시 보여줄 객체를 model에 담아서 전달
         model.addAttribute("nickname", member.getNickname()); // 성공시 보여줄 객체를 model에 담아서 전달

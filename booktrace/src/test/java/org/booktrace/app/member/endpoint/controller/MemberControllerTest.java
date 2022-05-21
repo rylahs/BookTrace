@@ -20,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,7 +46,8 @@ class MemberControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk()) // HTTP Status가 200 OK인지 확인합니다.
                 .andExpect(MockMvcResultMatchers.view().name("member/sign-up")) // view가 제대로 이동했는지 확인합니다.
-                .andExpect(MockMvcResultMatchers.model().attributeExists("signUpForm")); // 객체로 전달했던 attribute가 존재하는지 확인합니다.
+                .andExpect(MockMvcResultMatchers.model().attributeExists("signUpForm")) // 객체로 전달했던 attribute가 존재하는지 확인합니다.
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -57,7 +60,8 @@ class MemberControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("member/sign-up"));
+                .andExpect(view().name("member/sign-up"))
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -70,7 +74,8 @@ class MemberControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("member/sign-up"));
+                .andExpect(view().name("member/sign-up"))
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -83,7 +88,8 @@ class MemberControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("member/sign-up"));
+                .andExpect(view().name("member/sign-up"))
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -96,7 +102,8 @@ class MemberControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("member/sign-up"));
+                .andExpect(view().name("member/sign-up"))
+                .andExpect(unauthenticated());
     }
 
 
@@ -110,7 +117,19 @@ class MemberControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("BookTraceAdmin"));
+
+        assertThat(memberRepository.existsByEmail("booktrace@admin.com")).isTrue();
+
+        Member member = memberRepository.findByEmail("booktrace@admin.com");
+        assertThat(member.getPassword()).isNotEqualTo("12341234");
+
+        assertThat(member.getEmailToken()).isNotNull();
+
+        then(mailSender)
+                .should()
+                .send(any(SimpleMailMessage.class));
     }
 
 
@@ -124,7 +143,8 @@ class MemberControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("BookTAd"));
 
         assertThat(memberRepository.existsByEmail("booktad@admin.com")).isTrue();
 
@@ -147,7 +167,9 @@ class MemberControllerTest {
                         .param("email", "email"))
                 .andExpect(status().isOk()) // 상태 자체는 200 OK 에서 변함이 없음
                 .andExpect(view().name("member/email-verification")) // 뷰도 변함 없음
-                .andExpect(model().attributeExists("error")); // error 객체가 model 객체를 통해 전달
+                .andExpect(model().attributeExists("error")) // error 객체가 model 객체를 통해 전달
+                .andExpect(unauthenticated());
+
     }
 
     @Test
@@ -159,6 +181,7 @@ class MemberControllerTest {
                 .password("12341234")
                 .nickname("testwwwww")
                 .build();
+
         Member newMember = memberRepository.save(member);// Member Entity Save
 
         newMember.generateToken(); //  Token Generate
@@ -169,7 +192,8 @@ class MemberControllerTest {
                 .andExpect(status().isOk()) // 상태는 변함 없음
                 .andExpect(view().name("member/email-verification")) // 뷰도 변함 없음
                 .andExpect(model().attributeDoesNotExist("error")) // Error 객체가 포함되지 않았는지 체크
-                .andExpect(model().attributeExists("numberOfMembers", "nickname")); // numberOfMembers와 nickname이 Model에 담겼는지 체크
+                .andExpect(model().attributeExists("numberOfMembers", "nickname")) // numberOfMembers와 nickname이 Model에 담겼는지 체크
+                .andExpect(authenticated().withUsername("testwwwww"));
     }
 
 }

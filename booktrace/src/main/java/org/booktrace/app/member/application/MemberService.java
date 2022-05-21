@@ -6,9 +6,14 @@ import org.booktrace.app.member.endpoint.controller.SignUpForm;
 import org.booktrace.app.member.infra.repository.MemberRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +23,15 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder; // DI Password Encoder
 
     @Transactional // DB Save
-    public void signUp(SignUpForm signUpForm) {
+    public Member signUp(SignUpForm signUpForm) {
         /** 회원 가입 로직 시작 */
         Member newMember = saveNewMember(signUpForm);
 
         newMember.generateToken(); //  이메일 인증용 토큰을 생성
 
         sendVerificationEmail(newMember);
+
+        return newMember;
     }
     public Member saveNewMember(SignUpForm signUpForm) {
         Member member = Member.builder() // Entity를 생성
@@ -33,8 +40,8 @@ public class MemberService {
                 .nickname(signUpForm.getNickname())
                 .build();
 
-        Member newMember = memberRepository.save(member); // Entity를 저장
-        return newMember;
+        // Entity를 저장
+        return memberRepository.save(member);
     }
 
     public void sendVerificationEmail(Member newMember) {
@@ -51,5 +58,18 @@ public class MemberService {
 
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email); // MemberRepository에서 email을 통해 Member Entity를 가져옴
+    }
+
+    /**
+     * SecurityContextHolder.getContext()로 SecurityContext를 얻습니다.
+     * 전역에서 호출할 수 있고 하나의 Context 객체가 반환됩니다.
+     *
+     * @param member
+     */
+    public void login(Member member) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(member.getNickname(),
+                member.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+
+        SecurityContextHolder.getContext().setAuthentication(token);
     }
 }
