@@ -1,6 +1,6 @@
-package org.booktrace.server.member.infra.repository;
+package org.booktrace.app.member.infra.repository;
 
-import org.booktrace.server.member.domain.entity.Member;
+import org.booktrace.app.member.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

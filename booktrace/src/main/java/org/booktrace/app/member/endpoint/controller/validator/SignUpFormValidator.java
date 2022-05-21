@@ -1,8 +1,8 @@
-package org.booktrace.server.member.endpoint.controller.validator;
+package org.booktrace.app.member.endpoint.controller.validator;
 
 import lombok.RequiredArgsConstructor;
-import org.booktrace.server.member.endpoint.controller.SignUpForm;
-import org.booktrace.server.member.infra.repository.MemberRepository;
+import org.booktrace.app.member.endpoint.controller.SignUpForm;
+import org.booktrace.app.member.infra.repository.MemberRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
