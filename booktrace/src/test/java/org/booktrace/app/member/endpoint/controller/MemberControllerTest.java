@@ -14,15 +14,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -136,4 +137,39 @@ class MemberControllerTest {
                 .send(any(SimpleMailMessage.class));
 
     }
+
+
+    @Test
+    @DisplayName("인증 메일 확인: 잘못된 링크 상황")
+    public void verifyEmailWithWrongLink() throws Exception {
+        mockMvc.perform(get("/check-email-token")
+                        .param("token", "token") // 유효하지 않은 토큰과 이메일을 입력
+                        .param("email", "email"))
+                .andExpect(status().isOk()) // 상태 자체는 200 OK 에서 변함이 없음
+                .andExpect(view().name("member/email-verification")) // 뷰도 변함 없음
+                .andExpect(model().attributeExists("error")); // error 객체가 model 객체를 통해 전달
+    }
+
+    @Test
+    @DisplayName("인증 메일 확인: 유효한 링크 상황")
+    @Transactional // DB Use
+    public void verifyEmailWithSuccessLink() throws Exception {
+        Member member = Member.builder() // 토큰을 생성하고 비교해야 되므로 계정을 생성
+                .email("test@test.com")
+                .password("12341234")
+                .nickname("testwwwww")
+                .build();
+        Member newMember = memberRepository.save(member);// Member Entity Save
+
+        newMember.generateToken(); //  Token Generate
+
+        mockMvc.perform(get("/check-email-token")
+                        .param("token", newMember.getEmailToken()) // 생성한 계정의 토큰
+                        .param("email", newMember.getEmail())) // 생성한 계정의 이메일
+                .andExpect(status().isOk()) // 상태는 변함 없음
+                .andExpect(view().name("member/email-verification")) // 뷰도 변함 없음
+                .andExpect(model().attributeDoesNotExist("error")) // Error 객체가 포함되지 않았는지 체크
+                .andExpect(model().attributeExists("numberOfMembers", "nickname")); // numberOfMembers와 nickname이 Model에 담겼는지 체크
+    }
+
 }
