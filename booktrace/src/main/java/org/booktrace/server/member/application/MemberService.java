@@ -6,6 +6,7 @@ import org.booktrace.server.member.endpoint.controller.SignUpForm;
 import org.booktrace.server.member.infra.repository.MemberRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
+
+    private final PasswordEncoder passwordEncoder; // DI Password Encoder
 
     public void signUp(SignUpForm signUpForm) {
         /** 회원 가입 로직 시작 */
@@ -25,7 +28,7 @@ public class MemberService {
     public Member saveNewMember(SignUpForm signUpForm) {
         Member member = Member.builder() // Entity를 생성
                 .email(signUpForm.getEmail())
-                .password(signUpForm.getPassword())
+                .password(passwordEncoder.encode(signUpForm.getPassword())) // 비밀번호를 인코딩 후 저장
                 .nickname(signUpForm.getNickname())
                 .build();
 

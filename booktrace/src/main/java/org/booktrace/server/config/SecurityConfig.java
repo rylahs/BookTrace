@@ -33,6 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder(); // 기본 인코더를 빈에 등록한다.
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder(); // 기본 인코더를 빈에 등록한다
     }
 }

@@ -1,5 +1,6 @@
 package org.booktrace.server.member.endpoint.controller;
 
+import org.booktrace.server.member.domain.entity.Member;
 import org.booktrace.server.member.infra.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -107,4 +112,28 @@ class MemberControllerTest {
                 .andExpect(view().name("redirect:/"));
     }
 
+
+    @Test
+    @DisplayName("회원 가입 성공 후 비밀번호 검증")
+    public void signUpSubmitPasswordNotEquals() throws Exception {
+        mockMvc.perform(post("/sign-up")
+                        .param("nickname", "BookTAd")
+                        .param("email", "booktad@admin.com")
+                        .param("password", "12341234")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        assertThat(memberRepository.existsByEmail("booktad@admin.com")).isTrue();
+
+        Member member = memberRepository.findByEmail("booktad@admin.com");
+        assertThat(member.getPassword()).isNotEqualTo("12341234");
+//        System.out.println("account.getPassword() = " + account.getPassword());
+
+        then(mailSender)
+                .should()
+                .send(any(SimpleMailMessage.class));
+
+    }
 }
