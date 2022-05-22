@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="kr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title>BookTrace</title>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<footer th:fragment="footer">
+    <div class="d-flex justify-content-center">
+        <img class="mb-2" src="/images/logo.png" alt="book_trace" width="23" height="23">
+        <small class="d-block mb-3 text-muted justify-content-center">BookTrace &copy; 2022</small>
+    </div>
+</footer>
+
+<nav th:fragment="navigation-bar" class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a class="navbar-brand"
+       th:href="@{/}"
+       href="/">
+        <img th:src="@{images/logo.png}"
+             src="./images/logo.png" width="30" height="30" alt="book_trace" style="margin-left: 10px">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-start">
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link btn btn-outline-success" th:href="@{/record}">독서 기록</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav justify-content-end">
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" th:href="@{/login}">Sign In</a>
+            </li>
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" th:href="@{/sign-up}">Sign Up</a>
+            </li>
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    프로필
+                </a>
+                <ul class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="userDropdown">
+                    <h6 class="dropdown-header">
+                        <span class="text-dark" sec:authentication="name">Username</span>
+                    </h6>
+                    <li><a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a></li>
+                    <div class="container-fluid">
+                        <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                            <button class="dropdown-item" type="submit">로그아웃</button>
+                        </form>
+                    </div>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -1,41 +1,8 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Sign Up</title>
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container {
-            max-width: 100%;
-        }
-    </style>
-</head>
+<head th:replace="fragment::head"></head>
 <body class="bg-light">
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <a class="navbar-brand" href="/" th:href="@{/}">
-        <img th:src="@{images/logo.png}"
-             src="../images/logo.png" width="30" height="30" alt="book_trace" style="margin-left: 10px">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-        <ul class="navbar-nav justify-content-start">
-
-        </ul>
-        <ul class="navbar-nav justify-content-end">
-            <li class="nav-item">
-                <a class="nav-link" href="#" th:href="@{/login}">Sign In</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" th:href="@{/sign-up}">Sign Up</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div th:replace="fragment::navigation-bar"></div>
 
 <div class="container">
     <div class="py-5 text-center">
@@ -94,15 +61,10 @@
         </form>
     </div>
 
-    <footer th:fragment="footer">
-        <div class="row justify-content-center">
-            <small class="d-flex mb-3 text-muted" style="justify-content: center">BookTrace &copy; 2022</small>
-        </div>
-    </footer>
+    <div th:replace="fragment::footer"></div>
 </div>
-<script th:src="@{/js/bootstrap.bundle.min.js}"
-        src="../js/bootstrap.bundle.min.js">
-</script>
+
+<script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script type="application/javascript">
     (function () {
         'use strict';
