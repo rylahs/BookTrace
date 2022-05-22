@@ -23,13 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
                 .anyRequest().authenticated();
 
-        http
-                .formLogin() // form 기반 인증
-                .loginPage("/login") // 로그인 페이지
-                .permitAll(); // 인증 없이 접근 권한 허용
-        http
-                .logout() // 로그아웃 설정
-                .logoutSuccessUrl("/"); // 루트페이지로 이동
+        http.formLogin() // form 기반 인증을 지원
+                .loginPage("/login") // 로그인 페이지를 지정
+                .permitAll(); // 인증하지 않아도 접근가능
+        http.logout() // 로그아웃 설정
+                .logoutSuccessUrl("/"); // 루트로 이동 테스트테스트
     }
 
     @Override
