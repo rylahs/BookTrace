@@ -47,6 +47,7 @@ public class MemberService implements UserDetailsService {
 
         // Entity를 저장
         return memberRepository.save(member);
+        //12341231231
     }
 
     public void sendVerificationEmail(Member newMember) {
