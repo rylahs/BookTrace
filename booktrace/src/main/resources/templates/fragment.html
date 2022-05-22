@@ -5,7 +5,13 @@
 <head th:fragment="head">
     <meta charset="UTF-8">
     <title>BookTrace</title>
+
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css"/>
+
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="node_modules/jdenticon/dist/jdenticon.min.js"></script>
     <style>
         .container {
             max-width: 100%;
@@ -49,7 +55,7 @@
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    프로필
+                    <svg data-jdenticon-value="user255" th:data-jdenticon-value="${#authentication.name}" width="24" height="24" class="rounded border bg-light"></svg>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="userDropdown">
                     <h6 class="dropdown-header">
