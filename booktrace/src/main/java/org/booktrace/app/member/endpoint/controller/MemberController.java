@@ -5,6 +5,7 @@ import org.booktrace.app.member.application.MemberService;
 import org.booktrace.app.member.domain.entity.Member;
 import org.booktrace.app.member.endpoint.controller.validator.SignUpFormValidator;
 import org.booktrace.app.member.infra.repository.MemberRepository;
+import org.booktrace.app.member.support.CurrentUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -82,4 +83,20 @@ public class MemberController {
         return "member/email-verification"; // Redirect 이메일 인증
     }
 
+    @GetMapping("/check-email")
+    public String checkMail(@CurrentUser Member member, Model model) { // 가입할 때 사용한 email 정보를 넘겨주면서 리다이렉트
+        model.addAttribute("email", member.getEmail());
+        return "member/check-email";
+    }
+
+    @GetMapping("/resend-email")
+    public String resendEmail(@CurrentUser Member member, Model model) { // (2)
+        if (!member.enableToSendEmail()) {
+            model.addAttribute("error", "인증 이메일은 5분에 한 번만 전송할 수 있습니다.");
+            model.addAttribute("email", member.getEmail());
+            return "member/check-email";
+        }
+        memberService.sendVerificationEmail(member);
+        return "redirect:/";
+    }
 }

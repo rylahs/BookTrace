@@ -30,17 +30,23 @@ public class Member extends AuditingEntity {
 
     private String emailToken;
 
+    private LocalDateTime emailTokenGeneratedAt; // 이메일 토큰 발급 시간 저장
     private LocalDateTime joinedDate;
 
-    @Embedded                                                                                           // (4)
+    @Embedded
     private Profile profile;
 
-    public void generateToken() {
+    public void generateToken() { 
         this.emailToken = UUID.randomUUID().toString();
+        this.emailTokenGeneratedAt = LocalDateTime.now(); // 토큰 발급 시간 업데이트
     }
-
+    
     public void verified() { // 계정이 유효한지 알 수 있는 항목, 가입 시간은 현재시간
         this.isValid = true;
         joinedDate = LocalDateTime.now();
+    }
+    
+    public boolean enableToSendEmail() {
+        return this.emailTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(5)); // 5분 지났는지 체크
     }
 }
