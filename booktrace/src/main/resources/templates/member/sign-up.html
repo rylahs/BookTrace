@@ -22,7 +22,10 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-start">
+
+        </ul>
         <ul class="navbar-nav justify-content-end">
             <li class="nav-item">
                 <a class="nav-link" href="#" th:href="@{/login}">Sign In</a>
@@ -66,27 +69,27 @@
             </div>
 
             <div class="form-group">
-                <label for="password">패스워드</label>
+                <label for="password">비밀번호</label>
                 <input id="password" type="password" th:field="*{password}" class="form-control"
                        aria-describedby="passwordHelp" required minlength="8" maxlength="50">
                 <small id="passwordHelp" class="form-text text-muted">
                     8자 이상 50자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
                 </small>
-                <small class="invalid-feedback">패스워드를 입력하세요.</small>
+                <small class="invalid-feedback">비밀번호를 입력하세요.</small>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password
                     Error</small>
             </div>
 
-            <div class="form-group mt-2">
+            <div class="form-group mt-2 justify-content-between">
                 <small id="submitHelp" class="form-text">
-                    <a href="#" class="btn btn-outline-dark"
+                    <a href="#" class="btn btn-outline-dark btn-sm justify-content-start"
                         style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">약관</a>에 동의하시면 가입하기 버튼을 클릭하세요.
                 </small>
-            </div>
-            <div class="mt-2">
-                <button class="btn btn-outline-dark btn-block justify-content-end" type="submit"
-                        aria-describedby="submitHelp">가입하기
-                </button>
+                <div class="mt-2">
+                    <button class="btn btn-outline-dark btn-block justify-content-end btn-sm" type="submit"
+                            aria-describedby="submitHelp">가입하기
+                    </button>
+                </div>
             </div>
         </form>
     </div>
