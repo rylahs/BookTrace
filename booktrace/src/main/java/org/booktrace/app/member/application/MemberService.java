@@ -1,6 +1,7 @@
 package org.booktrace.app.member.application;
 
 import lombok.RequiredArgsConstructor;
+import org.booktrace.app.member.domain.UserMember;
 import org.booktrace.app.member.domain.entity.Member;
 import org.booktrace.app.member.endpoint.controller.SignUpForm;
 import org.booktrace.app.member.infra.repository.MemberRepository;
@@ -67,7 +68,7 @@ public class MemberService {
      * @param member
      */
     public void login(Member member) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(member.getNickname(),
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(new UserMember(member),
                 member.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
 
         SecurityContextHolder.getContext().setAuthentication(token);
