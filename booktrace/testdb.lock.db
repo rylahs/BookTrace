@@ -1,0 +1,6 @@
+#FileLock
+#Sun May 22 20:31:02 KST 2022
+server=192.168.0.103\:14530
+hostName=192.168.0.103
+method=file
+id=180eb88f35c8e84aaab992a8e9a70435bfa84ec6e7c

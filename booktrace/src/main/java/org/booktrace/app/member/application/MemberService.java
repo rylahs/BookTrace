@@ -10,15 +10,19 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
     private final PasswordEncoder passwordEncoder; // DI Password Encoder
@@ -72,5 +76,17 @@ public class MemberService {
                 member.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
 
         SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // 재정의
+        Member member = Optional.ofNullable(memberRepository.findByEmail(username)) // 이메일 or 닉네임
+                .orElse(memberRepository.findByNickname(username));
+
+        if (member == null) { // 검색 X
+            throw new UsernameNotFoundException(username);
+        }
+
+        return new UserMember(member); // 계정이 존재할 경우 UserDetails의 구현체를 반환한다.
     }
 }

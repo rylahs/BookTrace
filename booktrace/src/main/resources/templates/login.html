@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="kr"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment::head"></head>
+
+<body class="bg-light">
+<div th:replace="fragment::navigation-bar"></div>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <p class="lead">BookTrace</p>
+        <h2>Login</h2>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <!-- error -->
+    <div th:if="${param.error}" class="ui-icon-alert alert-danger" role="alert">
+        <p class="text-center">로그인 정보가 정확하지 않습니다.</p>
+        <p class="text-center"><a href="#" th:href="@{/find-password}">비밀번호 찾기</a></p>
+    </div>
+
+    <form class="needs-validation col-sm-6" action="#" th:action="@{/login}" method="post" novalidate>
+        <div class="form-group">
+            <label for="username">Email or NickName</label>
+            <input id="username" type="text" name="username" class="form-control" placeholder="Email@email.com"
+                   aria-describedby="emailHelp" required>
+            <small id="emailHelp" class="form-text text-muted">
+                가입할 때 사용한 이메일 또는 닉네임을 입력하세요.
+            </small>
+            <small class="invalid-feedback">이메일을 입력하세요.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" name="password" class="form-control"
+                   aria-describedby="passwordHelp" required>
+            <small id="passwordHelp" class="form-text text-muted">
+                비밀번호가 기억나지 않으시나요? <a href="#" th:href="@{/email-login}">이메일로 로그인하기</a>
+            </small>
+            <small class="invalid-feedback">비밀번호를 입력하세요.</small>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-success btn-block" type="submit" aria-describedby="submitHelp">Sign In</button>
+            <small id="submitHelp" class="form-text text-muted">
+                아직 회원이 아니신가요? <a href="#" th:href="@{/sign-up}">Sign Up</a>
+            </small>
+        </div>
+    </form>
+</div>
+
+
+<script th:replace="fragment::form-validation"></script>
+</body>
+</html>
