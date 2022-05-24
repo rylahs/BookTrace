@@ -9,11 +9,10 @@ import java.util.List;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder @Getter @ToString
+@Builder @Getter
 public class Profile {
     private String bio;
-    @Convert(converter = ListStringConverter.class)                                                 // (6)
-    private List<String> url;
+    private String url;
     private String job;
     private String location;
     private String company;

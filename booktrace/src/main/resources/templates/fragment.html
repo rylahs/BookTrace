@@ -11,10 +11,20 @@
 
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="node_modules/jdenticon/dist/jdenticon.min.js"></script>
+    <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
     <style>
         .container {
             max-width: 100%;
+        }
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            background-color: #2c3034;
+        }
+        #v-pills-profile > p > span > a {
+            color: #084298;
+            text-decoration-line: none;
+        }
+        .nav-link {
+            color: #2c3034;
         }
     </style>
 </head>
@@ -30,8 +40,7 @@
     <a class="navbar-brand"
        th:href="@{/}"
        href="/">
-        <img th:src="@{images/logo.png}"
-             src="./images/logo.png" width="30" height="30" alt="book_trace" style="margin-left: 10px">
+        <img src="/images/logo.png" width="30" height="30" alt="book_trace" style="margin-left: 10px">
     </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"

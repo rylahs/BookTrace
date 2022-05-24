@@ -11,10 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -73,9 +70,8 @@ public class MemberController {
             return "member/email-verification";
         }
 
-        member.verified(); // 인증 성공
+        memberService.verify(member);
 
-        memberService.login(member);
 
         model.addAttribute("numberOfMembers", memberRepository.count()); // 성공시 보여줄 객체를 model에 담아서 전달
         model.addAttribute("nickname", member.getNickname()); // 성공시 보여줄 객체를 model에 담아서 전달
@@ -99,4 +95,16 @@ public class MemberController {
         memberService.sendVerificationEmail(member);
         return "redirect:/";
     }
+
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Member member) {
+        Member byNickname = memberRepository.findByNickname(nickname);
+        if (byNickname == null) { // 닉네임이 같은 사용자가 없으면 예외
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        model.addAttribute(byNickname); // 키를 생략하면 객체 타입을 camel-case로 전달
+        model.addAttribute("isOwner", byNickname.equals(member)); // 전달한 객체와 DB 객체가 같으면 인증됨
+        return "member/profile";
+    }
+
 }

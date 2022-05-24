@@ -2,9 +2,11 @@ package org.booktrace.app.member.domain.entity;
 
 import lombok.*;
 import org.booktrace.app.domain.entity.AuditingEntity;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -49,4 +51,31 @@ public class Member extends AuditingEntity {
     public boolean enableToSendEmail() {
         return this.emailTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(5)); // 5분 지났는지 체크
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null || Hibernate.getClass(this) != Hibernate.getClass(obj)) {
+            return false;
+        }
+
+        // Object -> Account Casting
+        Member member = (Member) obj;
+        // id가 비어있지 않고 비교 객체와 object 객체가 equals인지 검증 // id가 같으면 동일 객체
+        return id != null && Objects.equals(this.id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+    @PostLoad
+    private void init() {
+        if (profile == null) {
+            profile = new Profile();
+        }
+    }
+
 }

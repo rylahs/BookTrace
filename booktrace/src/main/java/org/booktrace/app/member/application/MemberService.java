@@ -15,13 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository; // DI
@@ -70,6 +71,7 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = Optional.ofNullable(memberRepository.findByEmail(username)) // (3)
                 .orElse(memberRepository.findByNickname(username));
@@ -77,6 +79,11 @@ public class MemberService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         return new UserMember(member); // (5)
+    }
+
+    public void verify(Member member) { // Controller 호출 메소드
+        member.verified();
+        login(member);
     }
 }
 
