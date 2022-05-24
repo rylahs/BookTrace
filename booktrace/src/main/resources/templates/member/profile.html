@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kr"
+<html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragment::head"></head>
 <body class="bg-light">
@@ -45,11 +45,11 @@
                             </span>
                             <span th:text="${member.profile.job}" class="col-9"></span>
                         </p>
-                        <p th:if="${!#strings.isEmpty(member.profile.location)}">
+                        <p th:if="${!#strings.isEmpty(member.profile.favorite)}">
                             <span style="...">
                                 <i class="fa fa-location-arrow col-1"></i>
                             </span>
-                            <span th:text="${member.profile.location}" class="col-9"></span>
+                            <span th:text="${member.profile.favorite}" class="col-9"></span>
                         </p>
                         <p th:if="${isOwner}">
                             <span style="font-size: 20px">

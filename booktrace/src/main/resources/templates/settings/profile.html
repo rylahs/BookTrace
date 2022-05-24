@@ -1,10 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment::head"></head>
+<body class="bg-light">
+<div th:replace="fragment::navigation-bar"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragment::setting-menu (currentMenu='profile')"></div>
+        </div>
+        <div class="col-8">
+            <h2 class="col-sm-12" th:text="${member.nickname}">nickname</h2>
+            <div class="row mt-3">
+                <form class="col-sm-6" action="#" th:action="@{/settings/profile}" th:object="${memberProfile}" method="post"
+                      novalidate>
+                    <div class="form-group">
+                        <label for="bio">한 줄 소개</label>
+                        <input id="bio" type="text" th:field="*{bio}" class="form-control"
+                               placeholder="한줄로 자신을 표현해보세요." aria-describedby="bioHelp" required/>
+                        <small id="bioHelp" class="form-text text-muted">
+                            40자 이내로 입력하세요.
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}">
+                            40자를 초과하였습니다.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="url">링크</label>
+                        <input id="url" type="text" th:field="*{url}" class="form-control"
+                               placeholder="http://github.com/yourGithubID" aria-describedby="urlHelp" required/>
+                        <small id="urlHelp" class="form-text text-muted">
+                            본인을 소개하는 링크(Blog, Github)를 추가하세요.
+                        </small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('url')}" th:errors="*{bio}">
+                            올바른 URL이 아닙니다.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="job">직업</label>
+                        <input id="job" type="text" th:field="*{job}" class="form-control"
+                               placeholder="직업을 적어주세요." aria-describedby="jobHelp" required/>
+                        <small id="jobHelp" class="form-text text-muted">
+                            ex) 개발자, 취업준비생, 군인, 공무원, 무직 등
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="favorite">관심 분야</label>
+                        <input id="favorite" type="text" th:field="*{favorite}" class="form-control"
+                               placeholder="문학, 교양, 소설, 에세이, 프로그래밍" aria-describedby="favoriteHelp" required/>
+                        <small id="favoriteHelp" class="form-text text-muted">
+                            관심 분야를 입력해주세요.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-sm btn-dark active" type="submit" aria-describedby="submitHelp">수정하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

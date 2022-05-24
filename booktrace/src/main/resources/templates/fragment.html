@@ -84,6 +84,15 @@
     </div>
 </nav>
 
+<div th:fragment="setting-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'} ? 'active list-group-item-dark'"
+       href="#" th:href="@{/settings/profile}">프로필</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'} ? 'active list-group-item-dark'"
+       href="#" th:href="@{/settings/password}">비밀번호</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'favorite'} ? 'active list-group-item-dark'"
+       href="#" th:href="@{/settings/tags}">관심 주제</a>
+</div>
+
 <script type="application/javascript" th:fragment="form-validation">
     (function () {
         'use strict';
@@ -105,3 +114,4 @@
         }, false)
     }())
 </script>
+
