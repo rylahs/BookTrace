@@ -17,8 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 public class SettingsController {
-    public static final String SETTING_PROFILE_TEMPLATE_NAME = "settings/profile";
-    public static final String SETTINGS_PROFILE_URL = "/" + SETTING_PROFILE_TEMPLATE_NAME;
+    static final String SETTING_PROFILE_TEMPLATE_NAME = "settings/profile";
+    static final String SETTINGS_PROFILE_URL = "/" + SETTING_PROFILE_TEMPLATE_NAME;
 
     private final MemberService memberService;
 

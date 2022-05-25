@@ -4,15 +4,20 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.booktrace.app.member.domain.entity.Member;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Optional;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberProfile {
+    @Length(max = 40)
     private String bio;
+    @Length(max = 50)
     private String url;
+    @Length(max = 50)
     private String job;
+    @Length(max = 50)
     private String favorite;
 
     public static MemberProfile from(Member member) {
