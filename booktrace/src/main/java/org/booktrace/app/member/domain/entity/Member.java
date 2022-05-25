@@ -88,7 +88,7 @@ public class Member extends AuditingEntity {
         this.profile.setUrl(memberProfile.getUrl());
         this.profile.setJob(memberProfile.getJob());
         this.profile.setFavorite(memberProfile.getFavorite());
-
+        this.profile.setImage(memberProfile.getImage());
 
     }
 }
