@@ -89,7 +89,12 @@ public class MemberService implements UserDetailsService {
 
     public void updateProfile(Member member, MemberProfile memberProfile) {
         member.updateProfile(memberProfile);
-        memberRepository.save(member);
+        memberRepository.save(member); // DB Transaction
+    }
+
+    public void updatePassword(Member member, String newPassword) {
+        member.updatePassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member); // DB Transaction
     }
 }
 

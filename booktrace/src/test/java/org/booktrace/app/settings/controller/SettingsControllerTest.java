@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,6 +34,9 @@ class SettingsControllerTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @AfterEach
     void afterEach() {
@@ -82,6 +86,89 @@ class SettingsControllerTest {
                 .andExpect(view().name(SettingsController.SETTING_PROFILE_TEMPLATE_NAME))
                 .andExpect(model().attributeExists("member"))
                 .andExpect(model().attributeExists("memberProfile"));
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경 폼 진입 테스트")
+    @PreAccount("testAcc")
+    void updatePasswordForm() throws Exception {
+        mockMvc.perform(get(SettingsController.SETTINGS_PASSWORD_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTING_PASSWORD_TEMPLATE_NAME))
+                .andExpect(model().attributeExists("member"))
+                .andExpect(model().attributeExists("passwordForm"));
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경 성공")
+    @PreAccount("testAcc")
+    void updatePasswordSuccess() throws Exception {
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "12344321")
+                        .param("newPasswordConfirm", "12344321")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingsController.SETTINGS_PASSWORD_URL))
+                .andExpect(flash().attributeExists("success_message"));
+
+        Member member = memberRepository.findByNickname("testAcc");
+        assertThat(passwordEncoder.matches("12344321", member.getPassword()));
+    }
+
+
+
+
+
+    @Test
+    @DisplayName("비밀번호 변경 실패(일치하지 않음)")
+    @PreAccount("testAcc")
+    void updatePasswordFailNotEqual() throws Exception {
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "12344321")
+                        .param("newPasswordConfirm", "12344325")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTING_PASSWORD_TEMPLATE_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("member"));
+
+        Member member = memberRepository.findByNickname("testAcc");
+        assertThat(passwordEncoder.matches("12341234", member.getPassword()));
+    }
+    @Test
+    @DisplayName("비밀번호 변경 실패(길이가 짧음)")
+    @PreAccount("testAcc")
+    void updatePasswordFailShortLength() throws Exception {
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "1234")
+                        .param("newPasswordConfirm", "1234")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTING_PASSWORD_TEMPLATE_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("member"));
+
+        Member member = memberRepository.findByNickname("testAcc");
+        assertThat(passwordEncoder.matches("12341234", member.getPassword()));
+    }
+    @Test
+    @DisplayName("비밀번호 변경 실패(길이가 김)")
+    @PreAccount("testAcc")
+    void updatePasswordFailLongLength() throws Exception {
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+                        .param("newPasswordConfirm", "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTING_PASSWORD_TEMPLATE_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("member"));
+
+        Member member = memberRepository.findByNickname("testAcc");
+        assertThat(passwordEncoder.matches("12341234", member.getPassword()));
     }
 
 

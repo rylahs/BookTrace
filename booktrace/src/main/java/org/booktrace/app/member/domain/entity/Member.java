@@ -91,4 +91,8 @@ public class Member extends AuditingEntity {
         this.profile.setImage(memberProfile.getImage());
 
     }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }
