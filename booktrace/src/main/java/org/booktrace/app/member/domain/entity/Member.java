@@ -2,6 +2,7 @@ package org.booktrace.app.member.domain.entity;
 
 import lombok.*;
 import org.booktrace.app.domain.entity.AuditingEntity;
+import org.booktrace.app.settings.controller.MemberProfile;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -78,4 +79,16 @@ public class Member extends AuditingEntity {
         }
     }
 
+    public void updateProfile(MemberProfile memberProfile) {
+        if (this.profile == null) {
+            this.profile = new Profile();
+        }
+
+        this.profile.setBio(memberProfile.getBio());
+        this.profile.setUrl(memberProfile.getUrl());
+        this.profile.setJob(memberProfile.getJob());
+        this.profile.setFavorite(memberProfile.getFavorite());
+
+
+    }
 }

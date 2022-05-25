@@ -5,6 +5,7 @@ import org.booktrace.app.member.domain.UserMember;
 import org.booktrace.app.member.domain.entity.Member;
 import org.booktrace.app.member.endpoint.controller.SignUpForm;
 import org.booktrace.app.member.infra.repository.MemberRepository;
+import org.booktrace.app.settings.controller.MemberProfile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -84,6 +85,11 @@ public class MemberService implements UserDetailsService {
     public void verify(Member member) { // Controller 호출 메소드
         member.verified();
         login(member);
+    }
+
+    public void updateProfile(Member member, MemberProfile memberProfile) {
+        member.updateProfile(memberProfile);
+        memberRepository.save(member);
     }
 }
 

@@ -9,7 +9,7 @@ import java.util.List;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder @Getter
+@Builder @Getter @Setter @ToString
 public class Profile {
     private String bio;
     private String url;
@@ -19,4 +19,7 @@ public class Profile {
     @Lob
     @Basic(fetch = FetchType.EAGER)
     private String image;
+
+
+
 }

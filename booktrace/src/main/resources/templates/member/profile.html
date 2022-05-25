@@ -15,7 +15,7 @@
         <div class="col-8">
             <h1 class="display-4" th:text="${member.nickname}">Nickname</h1>
 
-            <p class="lead" th:if="${!#strings.isEmpty(member.profile.bio)}" th:text="${member.profile.bio}">bio</p>
+            <p class="lead" th:if="${!#strings.isEmpty(member.profile.getBio())}" th:text="${member.profile.getBio()}">bio</p>
             <p class="lead" th:if="${#strings.isEmpty(member.profile.bio) && isOwner}">한줄 소개</p>
         </div>
 
@@ -35,7 +35,7 @@
                          aria-labelledby="v-pills-home-tab">
                         <p th:if="${!#strings.isEmpty(member.profile.url)}">
                             <span style="...">
-                                <i class="fa fa-link col-1"></i>
+                                <i class="fa fa-user-o col-1" aria-hidden="true"></i>
                             </span>
                             <span th:text="${member.profile.url}" class="col-11"></span>
                         </p>
@@ -47,7 +47,7 @@
                         </p>
                         <p th:if="${!#strings.isEmpty(member.profile.favorite)}">
                             <span style="...">
-                                <i class="fa fa-location-arrow col-1"></i>
+                                <i class="fa fa-heart col-1"></i>
                             </span>
                             <span th:text="${member.profile.favorite}" class="col-9"></span>
                         </p>
