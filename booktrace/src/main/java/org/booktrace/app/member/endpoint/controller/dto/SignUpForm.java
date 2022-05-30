@@ -1,4 +1,4 @@
-package org.booktrace.app.member.endpoint.controller;
+package org.booktrace.app.member.endpoint.controller.dto;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

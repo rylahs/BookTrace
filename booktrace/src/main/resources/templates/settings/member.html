@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragment::head"></head>
+
+<body class="bg-light">
+
+<nav th:replace="fragment::navigation-bar"></nav>
+<svg th:replace="fragment::svg-symbols"></svg>
+
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragment::setting-menu ('member')"></div>
+        </div>
+
+        <div class="col-8">
+            <div th:if="${success_message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <svg th:replace="fragment::symbol-success"></svg>
+                <span th:text="${success_message}">완료</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row">
+                <h2 class="col-12">닉네임 변경</h2>
+            </div>
+
+            <div class="row">
+                <form class="need-validation col-12 mb-3" th:object="${nicknameForm}" th:action="@{/settings/member}"
+                      method="post" novalidate>
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <svg th:replace="fragment::symbol-warning"></svg>
+                        <div>
+                            닉네임을 변경하시면 프로필 페이지 링크도 변경됩니다.
+                        </div>
+                    </div>
+
+                    <form>
+                        <div class="mb-3">
+                            <label for="nickname" class="form-label" hidden>닉네임</label>
+                            <input type="text" th:field="*{nickname}" class="form-control" id="nickname"
+                                   aria-describedby="nicknameHelp">
+                            <div id="nicknameHelp" class="form-text">
+                                공백 없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요.
+                            </div>
+                            <div class="invalid-feedback">닉네임을 입력하세요.</div>
+                            <div class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}"
+                                 th:errors="*{nickname}">닉네임 에러
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-dark">
+                            변경
+                        </button>
+                    </form>
+                </form>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="row">
+                <div class="col-sm-12 mt-3">
+                    <h2 class="text-danger">계정 삭제</h2>
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <svg th:replace="fragment::symbol-danger"/>
+                        <div>
+                            이 계정은 삭제할 수 없습니다. 관리자에게 문의를 주시면 답변해드리겠습니다 <br>
+                            <a href="dev.booktrace@gmail.com">dev.booktrace@gmail.com</a>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger disabled" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        계정 삭제
+                    </button>
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">계정 탈퇴</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    BookTrace 계정을 탈퇴하시겠습니까?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">아니오</button>
+                                    <button type="button" class="btn btn-outline-primary">네</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+<div th:replace="fragment::footer"></div>
+<script th:replace="fragment::form-validation"></script>
+
+</body>
+
+</html>

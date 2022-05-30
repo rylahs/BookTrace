@@ -5,6 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.booktrace.app.member.application.MemberService;
 import org.booktrace.app.member.domain.entity.Member;
 import org.booktrace.app.member.support.CurrentUser;
+import org.booktrace.app.settings.controller.dto.MemberProfile;
+import org.booktrace.app.settings.controller.dto.NicknameForm;
+import org.booktrace.app.settings.controller.dto.PasswordForm;
+import org.booktrace.app.settings.controller.validator.NicknameFormValidator;
+import org.booktrace.app.settings.controller.validator.PasswordFormValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,14 +30,22 @@ public class SettingsController {
     static final String SETTING_PASSWORD_TEMPLATE_NAME = "settings/password";
     static final String SETTINGS_PASSWORD_URL = "/" + SETTING_PASSWORD_TEMPLATE_NAME;
 
+    static final String SETTINGS_MEMBER_VIEW_NAME = "settings/member";
+    static final String SETTINGS_MEMBER_URL = "/" + SETTINGS_MEMBER_VIEW_NAME;
     private final MemberService memberService;
 
     private final PasswordFormValidator passwordFormValidator;
+    private final NicknameFormValidator nicknameFormValidator;
 
 
     @InitBinder("passwordForm")
     public void setPasswordFormValidator(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(passwordFormValidator);
+    }
+
+    @InitBinder("nicknameForm")
+    public void setNicknameFormValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(nicknameFormValidator);
     }
 
     @GetMapping(SETTINGS_PROFILE_URL) // 인증된 사용자만 이용 가능
@@ -60,7 +73,7 @@ public class SettingsController {
     @GetMapping(SETTINGS_PASSWORD_URL)
     public String passwordUpdateForm(@CurrentUser Member member, Model model) {
         model.addAttribute(member); // 모델에 멤버와
-        model.addAttribute(new PasswordForm()); // 새 패스워드 폼을 담음
+        model.addAttribute(new PasswordForm());// 새 패스워드 폼을 담음
         return this.SETTING_PASSWORD_TEMPLATE_NAME;
     }
 
@@ -76,6 +89,27 @@ public class SettingsController {
         attributes.addFlashAttribute("success_message", "비밀번호를 변경했습니다.");
         return "redirect:" + SETTINGS_PASSWORD_URL;
     }
+
+    @GetMapping(SETTINGS_MEMBER_URL)
+    public String nicknameForm(@CurrentUser Member member, Model model) {
+        model.addAttribute(member);
+        model.addAttribute(new NicknameForm(member.getNickname()));
+        return SETTINGS_MEMBER_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_MEMBER_URL)
+    public String updateNickname(@CurrentUser Member member, @Validated NicknameForm nicknameForm, BindingResult bindingResult, Model model, RedirectAttributes attributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(member);
+            return SETTINGS_MEMBER_VIEW_NAME;
+        }
+        memberService.updateNickname(member, nicknameForm.getNickname());
+        attributes.addFlashAttribute("success_message", "닉네임이 수정되었습니다.");
+        return "redirect:" + SETTINGS_MEMBER_URL;
+    }
+
+
+
 
     @GetMapping("/settings/favorite")
     public String tempFavorite() {

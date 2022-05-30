@@ -1,8 +1,7 @@
 package org.booktrace.app;
 
 import org.booktrace.app.member.application.MemberService;
-import org.booktrace.app.member.endpoint.controller.SignUpForm;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.booktrace.app.member.endpoint.controller.dto.SignUpForm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

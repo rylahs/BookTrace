@@ -1,6 +1,7 @@
 package org.booktrace.app.member.endpoint.controller;
 
 import org.booktrace.app.member.application.MemberService;
+import org.booktrace.app.member.endpoint.controller.dto.SignUpForm;
 import org.booktrace.app.member.infra.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

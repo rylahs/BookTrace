@@ -2,7 +2,7 @@ package org.booktrace.app.member.domain.entity;
 
 import lombok.*;
 import org.booktrace.app.domain.entity.AuditingEntity;
-import org.booktrace.app.settings.controller.MemberProfile;
+import org.booktrace.app.settings.controller.dto.MemberProfile;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -94,5 +94,9 @@ public class Member extends AuditingEntity {
 
     public void updatePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

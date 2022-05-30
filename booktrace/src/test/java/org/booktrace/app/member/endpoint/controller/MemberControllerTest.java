@@ -1,5 +1,7 @@
 package org.booktrace.app.member.endpoint.controller;
 
+import org.booktrace.app.mail.EmailMessage;
+import org.booktrace.app.mail.EmailService;
 import org.booktrace.app.member.domain.entity.Member;
 import org.booktrace.app.member.infra.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +39,7 @@ class MemberControllerTest {
     MemberRepository memberRepository;
 
     @MockBean
-    JavaMailSender mailSender;
+    EmailService emailService;
 
     @Test
     @DisplayName("회원 가입 화면 진입 성공 테스트")
@@ -127,9 +129,9 @@ class MemberControllerTest {
 
         assertThat(member.getEmailToken()).isNotNull();
 
-        then(mailSender)
+        then(emailService)
                 .should()
-                .send(any(SimpleMailMessage.class));
+                .sendEMail(any(EmailMessage.class));
     }
 
 
@@ -152,9 +154,9 @@ class MemberControllerTest {
         assertThat(member.getPassword()).isNotEqualTo("12341234");
 //        System.out.println("account.getPassword() = " + account.getPassword());
 
-        then(mailSender)
+        then(emailService)
                 .should()
-                .send(any(SimpleMailMessage.class));
+                .sendEMail(any(EmailMessage.class));
 
     }
 

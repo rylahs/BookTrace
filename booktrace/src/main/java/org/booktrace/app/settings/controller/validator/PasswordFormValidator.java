@@ -1,5 +1,6 @@
-package org.booktrace.app.settings.controller;
+package org.booktrace.app.settings.controller.validator;
 
+import org.booktrace.app.settings.controller.dto.PasswordForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

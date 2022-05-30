@@ -3,6 +3,7 @@ package org.booktrace.app.member.endpoint.controller;
 import lombok.RequiredArgsConstructor;
 import org.booktrace.app.member.application.MemberService;
 import org.booktrace.app.member.domain.entity.Member;
+import org.booktrace.app.member.endpoint.controller.dto.SignUpForm;
 import org.booktrace.app.member.endpoint.controller.validator.SignUpFormValidator;
 import org.booktrace.app.member.infra.repository.MemberRepository;
 import org.booktrace.app.member.support.CurrentUser;

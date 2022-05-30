@@ -40,7 +40,7 @@ dependencies {
 
 	// DataBase
 	runtimeOnly 'com.h2database:h2'
-//	runtimeOnly 'mysql:mysql-connector-java:8.0.29'
+	runtimeOnly 'mysql:mysql-connector-java:8.0.29'
 
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

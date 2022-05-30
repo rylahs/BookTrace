@@ -1,11 +1,14 @@
 package org.booktrace.app.member.application;
 
 import lombok.RequiredArgsConstructor;
+import org.booktrace.app.config.AppProperties;
+import org.booktrace.app.mail.EmailMessage;
+import org.booktrace.app.mail.EmailService;
 import org.booktrace.app.member.domain.UserMember;
 import org.booktrace.app.member.domain.entity.Member;
-import org.booktrace.app.member.endpoint.controller.SignUpForm;
+import org.booktrace.app.member.endpoint.controller.dto.SignUpForm;
 import org.booktrace.app.member.infra.repository.MemberRepository;
-import org.booktrace.app.settings.controller.MemberProfile;
+import org.booktrace.app.settings.controller.dto.MemberProfile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -27,10 +32,13 @@ import java.util.Optional;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository; // DI
-    private final JavaMailSender mailSender; // DI JavaMailSender
+
+    private final EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
+    private final TemplateEngine templateEngine;
+    private final AppProperties appProperties;
     @Transactional
     public Member signUp(SignUpForm signUpForm) {
         Member newMember = saveNewMember(signUpForm);
@@ -52,12 +60,19 @@ public class MemberService implements UserDetailsService {
     }
 
     public void sendVerificationEmail(Member newMember) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage(); // Create Email Object
-        mailMessage.setTo(newMember.getEmail());
-        mailMessage.setSubject("BookTrace 회원 가입 인증");
-        mailMessage.setText(String.format("/check-email-token?token=%s&email=%s", newMember.getEmailToken(),
-                newMember.getEmail())); // Email Contents
-        mailSender.send(mailMessage); // Send Mail
+        Context context = new Context();
+        context.setVariable("link", String.format("/check-email-token?token=%s&email=%s", newMember.getEmailToken(),
+                newMember.getEmail()));
+        context.setVariable("nickname", newMember.getNickname());
+        context.setVariable("linkName", "이메일 인증");
+        context.setVariable("message", "BookTrace 가입 인증을 위해 링크를 클릭하세요");
+        context.setVariable("host", appProperties.getHost());
+        String msg = templateEngine.process("mail/simple-link",context);
+        emailService.sendEMail(EmailMessage.builder()
+                .to(newMember.getEmail())
+                .subject("BookTrace 회원 가입 인증 링크")
+                .message(msg)
+                .build());
     }
 
     public Member findMemberByEmail(String email) {
@@ -84,6 +99,7 @@ public class MemberService implements UserDetailsService {
 
     public void verify(Member member) { // Controller 호출 메소드
         member.verified();
+        memberRepository.save(member);
         login(member);
     }
 
@@ -95,6 +111,12 @@ public class MemberService implements UserDetailsService {
     public void updatePassword(Member member, String newPassword) {
         member.updatePassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member); // DB Transaction
+    }
+
+    public void updateNickname(Member member, String nickname) {
+        member.updateNickname(nickname);
+        memberRepository.save(member);
+        login(member);
     }
 }
 

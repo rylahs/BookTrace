@@ -1,4 +1,4 @@
-package org.booktrace.app.settings.controller;
+package org.booktrace.app.settings.controller.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;
