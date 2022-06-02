@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment::head"></head>
+
+<body class="bg-light">
+<div th:replace="fragment::navigation-bar"></div>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <p class="lead">BookTrace</p>
+        <h2>BookSearch</h2>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <!-- error -->
+    <form class="needs-validation col-sm-6" action="#" th:action="@{/search_res}" method="get" novalidate>
+        <div class="form-group">
+            <label for="query">검색어</label>
+            <input id="query" type="text" name="query" class="form-control" placeholder="책 제목을 검색하세요"
+                   aria-describedby="emailHelp" required>
+            <small id="searchHelp" class="form-text text-muted">
+              검색어를 입력하세요.
+            </small>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success btn-block" type="submit" aria-describedby="submitHelp">검색</button>
+        </div>
+    </form>
+</div>
+
+<div th:replace="fragment::footer"></div>
+</body>
+</html>

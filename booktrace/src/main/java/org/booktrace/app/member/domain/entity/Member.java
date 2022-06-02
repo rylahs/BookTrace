@@ -7,6 +7,8 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,6 +40,11 @@ public class Member extends AuditingEntity {
 
     @Embedded
     private Profile profile;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Book> books = new ArrayList<>();
+
 
     public void generateToken() { 
         this.emailToken = UUID.randomUUID().toString();
